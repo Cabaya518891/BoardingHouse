@@ -63,11 +63,24 @@ class _welcomeState extends State<welcome> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
-  // New logo: a bed-in-a-house mark drawn with icons (no image file needed)
+  // Soft decorative circle used in the background
+  Widget _buildGlow(double size, double opacity) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.white.withOpacity(opacity),
+      ),
+    );
+  }
+
+  // Boarding house logo: a two-story house with lit windows and a door,
+  // drawn in code (no image file needed)
   Widget _buildLogo() {
     return Container(
-      width: 150,
-      height: 150,
+      width: 170,
+      height: 170,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: Colors.white.withOpacity(0.10),
@@ -75,36 +88,25 @@ class _welcomeState extends State<welcome> with SingleTickerProviderStateMixin {
       ),
       child: Center(
         child: Container(
-          width: 112,
-          height: 112,
+          width: 130,
+          height: 130,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: Colors.white,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.25),
-                blurRadius: 24,
-                offset: const Offset(0, 12),
+                color: Colors.black.withOpacity(0.28),
+                blurRadius: 28,
+                offset: const Offset(0, 14),
               ),
             ],
           ),
-          child: Stack(
-            alignment: Alignment.center,
-            children: const [
-              Icon(
-                Icons.house_rounded,
-                size: 68,
-                color: Color(0xFF1B2A41),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 14),
-                child: Icon(
-                  Icons.bed_rounded,
-                  size: 28,
-                  color: Color(0xFF2F6FED),
-                ),
-              ),
-            ],
+          child: const Center(
+            child: SizedBox(
+              width: 76,
+              height: 76,
+              child: CustomPaint(painter: _BoardingHouseLogoPainter()),
+            ),
           ),
         ),
       ),
@@ -128,76 +130,173 @@ class _welcomeState extends State<welcome> with SingleTickerProviderStateMixin {
               end: Alignment.bottomCenter,
             ),
           ),
-          child: SafeArea(
-            child: Column(
-              children: [
-                const Spacer(flex: 3),
-                // Animated Logo
-                ScaleTransition(
-                  scale: _scaleAnimation,
-                  child: FadeTransition(
-                    opacity: _fadeAnimation,
-                    child: _buildLogo(),
-                  ),
-                ),
-                const SizedBox(height: 32),
-                // App name and tagline
-                FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: Column(
-                    children: const [
-                      Text(
-                        'Room for you',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 32,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 0.3,
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        'Find a room that fits you.',
-                        style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const Spacer(flex: 3),
-                // Interactive Visual Feedback
-                FadeTransition(
-                  opacity: _fadeAnimation,
+          child: Stack(
+            children: [
+              // Background decoration
+              Positioned(top: -90, right: -70, child: _buildGlow(260, 0.06)),
+              Positioned(top: 120, left: -80, child: _buildGlow(170, 0.05)),
+              Positioned(bottom: -110, left: -60, child: _buildGlow(300, 0.06)),
+              SafeArea(
+                child: SizedBox(
+                  width: double.infinity,
                   child: Column(
                     children: [
-                      const SizedBox(
-                        width: 22,
-                        height: 22,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 2.5,
+                      const Spacer(flex: 3),
+                      // Animated Logo
+                      ScaleTransition(
+                        scale: _scaleAnimation,
+                        child: FadeTransition(
+                          opacity: _fadeAnimation,
+                          child: _buildLogo(),
                         ),
                       ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Tap anywhere to skip',
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.7),
-                          fontSize: 13,
-                          letterSpacing: 0.5,
+                      const SizedBox(height: 36),
+                      // App name and tagline
+                      FadeTransition(
+                        opacity: _fadeAnimation,
+                        child: Column(
+                          children: [
+                            const Text(
+                              'Room for you',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 34,
+                                fontWeight: FontWeight.w800,
+                                letterSpacing: 0.3,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 14, vertical: 6),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.14),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: const Text(
+                                'BOARDING HOUSE',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: 3,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            const Text(
+                              'Find a room that fits you.',
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
+                      const Spacer(flex: 3),
+                      // Interactive Visual Feedback
+                      FadeTransition(
+                        opacity: _fadeAnimation,
+                        child: Column(
+                          children: [
+                            const SizedBox(
+                              width: 22,
+                              height: 22,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2.5,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              'Tap anywhere to skip',
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.7),
+                                fontSize: 13,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 32),
                     ],
                   ),
                 ),
-                const SizedBox(height: 32),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
+}
+
+// Draws the boarding house mark: chimney, roof, two floors of windows, door
+class _BoardingHouseLogoPainter extends CustomPainter {
+  const _BoardingHouseLogoPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final double w = size.width;
+    final double h = size.height;
+
+    final Paint navy = Paint()..color = const Color(0xFF1B2A41);
+    final Paint blue = Paint()..color = const Color(0xFF2F6FED);
+    final Paint warm = Paint()..color = const Color(0xFFFFC857);
+
+    // Chimney
+    canvas.drawRect(Rect.fromLTWH(w * 0.68, h * 0.10, w * 0.10, h * 0.20), navy);
+
+    // Roof
+    final Path roof = Path()
+      ..moveTo(w * 0.50, h * 0.04)
+      ..lineTo(w * 0.98, h * 0.42)
+      ..lineTo(w * 0.02, h * 0.42)
+      ..close();
+    canvas.drawPath(roof, blue);
+
+    // Building body
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromLTWH(w * 0.14, h * 0.42, w * 0.72, h * 0.50),
+        Radius.circular(w * 0.04),
+      ),
+      navy,
+    );
+
+    // Windows (lit)
+    void window(double x, double y) {
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(
+          Rect.fromLTWH(w * x, h * y, w * 0.16, h * 0.13),
+          Radius.circular(w * 0.02),
+        ),
+        warm,
+      );
+    }
+
+    // Top floor: three rooms
+    window(0.22, 0.49);
+    window(0.42, 0.49);
+    window(0.62, 0.49);
+
+    // Ground floor: window, door, window
+    window(0.22, 0.69);
+    window(0.62, 0.69);
+
+    // Door
+    canvas.drawRRect(
+      RRect.fromRectAndCorners(
+        Rect.fromLTWH(w * 0.42, h * 0.68, w * 0.16, h * 0.24),
+        topLeft: Radius.circular(w * 0.08),
+        topRight: Radius.circular(w * 0.08),
+      ),
+      blue,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
